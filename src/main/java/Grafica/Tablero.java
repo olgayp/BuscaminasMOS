@@ -227,11 +227,12 @@ public class Tablero extends JFrame{
 		jugador.add(nombJug);
 		jugador.add(fin);
 		jugador.add(nuevo);
-		jugador.setPreferredSize(new Dimension(55,50));
+		jugador.setPreferredSize(new Dimension(60,50));
 		add(jugador);
 		
 		contentPane.setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
 		pack();
+		
 		// Centrar el JFrame y desactivar boton maximizar
 		setLocationRelativeTo(null);   
 		this.setResizable(false); 
@@ -332,7 +333,6 @@ public class Tablero extends JFrame{
 		timerTask = new TimerTask(){
 			public void run (){
 				sumarContador();	
-				System.out.println("TIEMPO...."+getContador());
 				tiempo.setText(String.valueOf(getContador()));
 			}
 		};

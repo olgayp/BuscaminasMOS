@@ -3,7 +3,7 @@ import java.util.Calendar;
 
 //Almacena los usuarios nuevos junto con sus records
 
-public class User {
+public class User implements java.io.Serializable{
 	private String nombre;
 	private String  nivel;
 	private int record;
@@ -15,6 +15,7 @@ public class User {
 		nivel = n;
 		fechRecord = Calendar.getInstance();
 	}
+	
 	//Actualiza el record
 	public void nuevoRecord(int nRecord){
 		if(nRecord<=record){
@@ -27,6 +28,9 @@ public class User {
 	}
 	public int getRecord(){
 		return record;
+	}
+	public Calendar getFechRecord(){
+		return fechRecord;
 	}
 	public void setNombre(String nomb){
 		nombre = nomb;

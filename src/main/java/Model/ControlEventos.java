@@ -95,7 +95,8 @@ public class ControlEventos implements ActionListener, MouseListener{
 		}
 		
 		if (e.getSource().equals(fin)){
-			Buscaminas.getBuscaminas().setTop10(new Top10());
+			//Buscaminas.getBuscaminas().setTop10(new Top10());
+			Buscaminas.getBuscaminas().getTop10().visualiazarTop10();
 			Buscaminas.getBuscaminas().getTablero().getFin().setEnabled(false);
 			Buscaminas.getBuscaminas().getTablero().getReinicio().setEnabled(false);
 			Buscaminas.getBuscaminas().getTablero().getJuegoReiniciar().setEnabled(false);
@@ -270,7 +271,6 @@ public class ControlEventos implements ActionListener, MouseListener{
 	 * Eventos de control de boton derecho sobre las Casillas (Marcar/Desmarcar)
 	 */
 	public void mousePressed(MouseEvent me) {  //si boton derecho marcar con bandera
-		System.out.println("BOTON DERECHO....");
 		GrafCasilla grafCas = (GrafCasilla)me.getSource();
 		Casilla cas = ((GrafCasilla)me.getSource()).getCasilla();
 		if (((GrafCasilla)me.getSource()).isEnabled()){

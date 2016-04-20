@@ -130,7 +130,6 @@ public class Casilla extends Observable{
 			this.notifyObservers("pararGano");
 	}
 	public void iniciar(){
-		System.out.println("INICIO RECIBIDO...");
 		setChanged();
 		this.notifyObservers("iniciar");
 	}

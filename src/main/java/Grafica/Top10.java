@@ -2,6 +2,8 @@ package Grafica;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextArea;
 
+import Model.Buscaminas;
 import Model.ControlEventos;
 import Model.User;
 
@@ -17,6 +20,7 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.util.Hashtable;
+import java.io.*;
 
 public class Top10 extends JFrame {
 
@@ -26,7 +30,8 @@ public class Top10 extends JFrame {
 	private JLabel label;
 	private JLabel lblNewLabel;
 	private JButton aceptar;
-	private User[] top10;
+	//private User[] top10;
+	private ArrayList<User> top10;
 
 	/**
 	 * Launch the application.
@@ -35,7 +40,7 @@ public class Top10 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Top10 frame = new Top10(null);
+					Top10 frame = new Top10();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,14 +54,14 @@ public class Top10 extends JFrame {
 	 * @param top 
 	 */
 	public Top10(){
-		this.top10 = new User[10];;
+		this.top10 = new ArrayList<User>();
 		inicializarTop10();
 		initialize();
 	}
-	public Top10(User[] top) {
-		this.top10=top;
+	/*public Top10(User[] top) {
+		//this.top10=top;
 		initialize();
-	}
+	}*/
 	private void initialize() {
 		setTitle("Buscaminas: Los/as 10 mejores");
 		String im = getClass().getClassLoader().getResource("imgBusc.jpg").toString();
@@ -68,7 +73,7 @@ public class Top10 extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		textArea = new JTextArea();
-		textArea.setBounds(65, 60, 280, 200);
+		textArea.setBounds(20, 60, 350, 200);
 		textArea.setEditable(false);
 		textArea.setBorder((new MyBorder(true)).getBorde1());
 		contentPane.setLayout(null);
@@ -79,8 +84,7 @@ public class Top10 extends JFrame {
 		aceptar.addActionListener(new ControlEventos());
 		contentPane.add(aceptar);
 		getLabel();
-		getLblNewLabel();
-		setVisible(true);
+		setResizable(false);
 	}
 
 	private JLabel getLblMejoresResultados() {
@@ -94,10 +98,8 @@ public class Top10 extends JFrame {
 	public void getLabel() {
 		for(int i=1;i<11;i++){
 			label = new JLabel(i+"\u00BA");
-			//label.setBounds(113, 67+(i*15), 34, 14);
-			label.setBounds(30, 10+(i*15), 34, 14);
+			label.setBounds(10, 10+(i*15), 34, 14);
 			textArea.add(label);
-			//this.add(label);
 			label.setVisible(true);
 		}
 		
@@ -107,13 +109,18 @@ public class Top10 extends JFrame {
 		for (User u:top10){
 			i++;
 			lblNewLabel = new JLabel(String.valueOf(u.getRecord()));
-			lblNewLabel.setBounds(70, 10+(i*15), 30, 14);
+			lblNewLabel.setBounds(35, 10+(i*15), 50, 14);
 			textArea.add(lblNewLabel);
 			lblNewLabel = new JLabel(u.getNombre());
-			//lblNewLabel.setBounds(180, 67+(i*15), 148, 14);
-			lblNewLabel.setBounds(115, 10+(i*15), 140, 14);
+			lblNewLabel.setBounds(90, 10+(i*15), 150, 14);
 			textArea.add(lblNewLabel);
-			//this.add(lblNewLabel);
+			String fecha = u.getFechRecord().get(Calendar.DATE) +"-"+
+					       (u.getFechRecord().get(Calendar.MONTH)+1)+"-"+
+					       u.getFechRecord().get(Calendar.YEAR);
+	     
+			lblNewLabel = new JLabel(String.valueOf(fecha));
+			lblNewLabel.setBounds(220, 10+(i*15), 120, 14);
+			textArea.add(lblNewLabel);
 			lblNewLabel.setVisible(true);
 			
 		}
@@ -123,25 +130,57 @@ public class Top10 extends JFrame {
 	}
 	
 	public void inicializarTop10(){
-		for(int i=0;i<top10.length;i++)
-			top10[i]=new User("Desconocido","FACIL",99999);
+		leerFichero();
+	
+	}
+	public void visualiazarTop10(){
+	
+		comprobarRecord();
+		getLblNewLabel();
+		this.setVisible(true);
 	}
 	
-	//Insertar algoritmo de ordenacion aqui
-	public void ordenarTabla(){
-		User jugador= new User(top10[1].getNombre(),top10[1].getNivel(),top10[1].getRecord());
-		int cont = top10[1].getRecord();
-		if(top10[9].getRecord()>=cont){
-			top10[9]=jugador;
-			for(int p=1;p<top10.length;p++){
-				User tmp=top10[p];
-				int j;
-				for(j=p;j>0&&tmp.getRecord()<top10[j-1].getRecord();j--){
-					top10[j]=top10[j-1];
-				}
-				top10[j]=tmp;
-			}
+	public void comprobarRecord(){
+		boolean enc = false;
+		for (int i = 0; i < 10 && !enc; i++){
+		   if (Buscaminas.getBuscaminas().getUser().getRecord() <
+				top10.get(i).getRecord()){
+			    top10.add(i,Buscaminas.getBuscaminas().getUser());
+			    top10.remove(9);
+		        enc = true;
+		        actualizarFichero();
+		   }
 		}
-		
+	}
+	
+	public void actualizarFichero(){
+		try{
+		   String file
+		   = getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
+		   FileOutputStream fileOut = new FileOutputStream(file);
+	       ObjectOutputStream salida=new ObjectOutputStream(fileOut);
+	       for (User u : top10){
+	            salida.writeObject(u);
+	       }
+	       salida.close();
+		}catch(Exception e){};
+	}
+	
+	public void leerFichero(){
+		try{
+			String file
+			= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
+			int i = 0;
+	    	FileInputStream fileIn = new FileInputStream("fichero.obj");
+	    	ObjectInputStream entrada=new ObjectInputStream(fileIn);
+	    	Object u = null;
+	    	u = entrada.readObject();
+	    	while(u != null){
+	    		top10.add(i,(User)u);
+	    		i = i+1;
+	            u = entrada.readObject();
+	    	}
+	        entrada.close();
+		}catch(Exception e){};
 	}
 }

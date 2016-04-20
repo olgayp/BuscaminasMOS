@@ -77,6 +77,7 @@ public class Buscaminas implements Observer{
 	 * Inicio de juego con la pantalla de eleccion de nivel
 	 */
 	public void iniciarJuego(){
+		top10 = new Top10();
 		l = new Logueo();
 		l.getBtnAceptar().addActionListener(new ControlEventos());
 	}
@@ -113,11 +114,11 @@ public class Buscaminas implements Observer{
 	 */
 	public void createUsuario(){
 	      String usuario = "";
-		  if (l.getTextField().getText() == "")
+		  if (l.getTextField().getText().equals(""))
 			  usuario = "Desconocido";
 		  else
 			  usuario = l.getTextField().getText();
-		  int indice = l.getComboBox().getSelectedIndex()+1;
+		  int indice = l.getComboBox().getSelectedIndex();
 		  String nameNivel=  NivelDificultad.values()[indice].name();
 		  user = new User(usuario,nameNivel,99999);
     }
@@ -147,13 +148,19 @@ public class Buscaminas implements Observer{
     }
 	
 	/**
+	 * getter del usuario que esta jugando
+	 * @return
+	 */
+	public User getUser(){
+		return user;
+	}
+	
+	/**
 	 * setter del ranking Top10
 	 */
 	public void setTop10(Top10 top10){
 		this.top10 = top10;
 	}
-	
-	
 	
 	/**
 	 *************************************
@@ -177,7 +184,6 @@ public class Buscaminas implements Observer{
 			tablero.restarMinas();	
 			tablero.setCasillasActivas(tablero.getCasActivas() - 1);
 			tablero.sumarMinaDescubierta();
-			System.out.println("minas descubiertas "+ tablero.getMinasDescubiertas());
 			if (tablero.getMinasDescubiertas() == tablero.getNivel().getNumMinas() ||
 				tablero.getCasActivas() == Integer.parseInt(tablero.getMinas().getText())){
 				victoria();
@@ -187,7 +193,6 @@ public class Buscaminas implements Observer{
 			tablero.sumarMinas();
         	tablero.setCasillasActivas(tablero.getCasActivas() + 1);
         	tablero.restarMinaDescubierta();
-        	System.out.println(((Casilla)o).getValor());
         	if (tablero.getCasActivas() == Integer.parseInt(tablero.getMinas().getText())){
         		victoria();
 			}	
@@ -231,6 +236,7 @@ public class Buscaminas implements Observer{
 	    URL url=getClass().getClassLoader().getResource("Victory.wav");
 	    AudioClip clip=Applet.newAudioClip(url);
 	    clip.play();
+	    user.nuevoRecord(tablero.getContador());
 	    JOptionPane.showMessageDialog(tablero.getPCasillas(),"¡GANASTE...!" , "Ganador",
 	    		JFrame.NORMAL, tablero.getIconoBusc());   
 	}
@@ -242,11 +248,11 @@ public class Buscaminas implements Observer{
 		tablero.getTimer().cancel(); 
 		tablero.getFin().setEnabled(true);
 		String sreinic = getClass().getClassLoader().getResource("perdio.png").toString();
-		tablero.getReinicio().setIcon(new ImageIcon(sreinic.substring(6))); 
-		tablero.setEstadoJuego(2);
 		URL url=getClass().getClassLoader().getResource("minaSound.wav");
 		AudioClip clip=Applet.newAudioClip(url);
 		clip.play();
+		tablero.getReinicio().setIcon(new ImageIcon(sreinic.substring(6))); 
+		tablero.setEstadoJuego(2);
 		JOptionPane.showMessageDialog(tablero.getPCasillas(),"¡PERDISTE...!" , "Perdedor",
 		    		JFrame.NORMAL, tablero.getIconoBusc());
 	}
