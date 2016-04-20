@@ -43,7 +43,7 @@ import javax.swing.border.BevelBorder;
 
 /**
  * 
- * @author Susana Abascal
+ * @author Susana /Olga/Miguel
  *
  */
 
@@ -190,8 +190,7 @@ public class Buscaminas implements Observer{
         	System.out.println(((Casilla)o).getValor());
         	if (tablero.getCasActivas() == Integer.parseInt(tablero.getMinas().getText())){
         		victoria();
-			}
-			
+			}	
 		}
 		
 		if (arg.equals("pararPierdo")){
