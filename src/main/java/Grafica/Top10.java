@@ -30,8 +30,8 @@ public class Top10 extends JFrame {
 	private JLabel label;
 	private JLabel lblNewLabel;
 	private JButton aceptar;
-	//private User[] top10;
 	private ArrayList<User> top10;
+	public static final int MEJORES=10; 
 
 	/**
 	 * Launch the application.
@@ -58,10 +58,7 @@ public class Top10 extends JFrame {
 		inicializarTop10();
 		initialize();
 	}
-	/*public Top10(User[] top) {
-		//this.top10=top;
-		initialize();
-	}*/
+	
 	private void initialize() {
 		setTitle("Buscaminas: Los/as 10 mejores");
 		String im = getClass().getClassLoader().getResource("imgBusc.jpg").toString();
@@ -95,6 +92,7 @@ public class Top10 extends JFrame {
 		}
 		return lblMejoresResultados;
 	}
+	
 	public void getLabel() {
 		for(int i=1;i<11;i++){
 			label = new JLabel(i+"\u00BA");
@@ -104,6 +102,7 @@ public class Top10 extends JFrame {
 		}
 		
 	}
+	
 	public void getLblNewLabel() {
 		int i=0;
 		for (User u:top10){
@@ -125,6 +124,7 @@ public class Top10 extends JFrame {
 			
 		}
 	}
+	
 	public JButton getBtnAceptar() {
 		return aceptar;
 	}
@@ -133,6 +133,7 @@ public class Top10 extends JFrame {
 		leerFichero();
 	
 	}
+	
 	public void visualiazarTop10(){
 	
 		comprobarRecord();
@@ -142,34 +143,35 @@ public class Top10 extends JFrame {
 	
 	public void comprobarRecord(){
 		boolean enc = false;
-		for (int i = 0; i < 10 && !enc; i++){
+		for (int i = 0; i < MEJORES && !enc; i++){
 		   if (Buscaminas.getBuscaminas().getUser().getRecord() <
 				top10.get(i).getRecord()){
 			    top10.add(i,Buscaminas.getBuscaminas().getUser());
-			    top10.remove(9);
-		        enc = true;
-		        actualizarFichero();
+			    top10.remove(MEJORES);
+		        enc = true;   
 		   }
 		}
+		actualizarFichero();
 	}
 	
 	public void actualizarFichero(){
 		try{
-		   String file
-		   = getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
-		   FileOutputStream fileOut = new FileOutputStream(file);
+		   //String file
+		   //= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
+		   FileOutputStream fileOut = new FileOutputStream("fichero.obj");
 	       ObjectOutputStream salida=new ObjectOutputStream(fileOut);
-	       for (User u : top10){
-	            salida.writeObject(u);
+	       for (int j = 0; j < MEJORES; j++){
+	            salida.writeObject(top10.get(j));
 	       }
 	       salida.close();
 		}catch(Exception e){};
 	}
-	
+
+
 	public void leerFichero(){
 		try{
-			String file
-			= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
+			//String file
+			//= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
 			int i = 0;
 	    	FileInputStream fileIn = new FileInputStream("fichero.obj");
 	    	ObjectInputStream entrada=new ObjectInputStream(fileIn);

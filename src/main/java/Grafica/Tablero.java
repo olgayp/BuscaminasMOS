@@ -280,7 +280,6 @@ public class Tablero extends JFrame{
       		tablero [vf][vc] = new Casilla(-9,s.substring(6),vf,vc);
 			pm [ipm] = new PosiMina(vf,vc);   //Guardar posicion de mina generada
 			ipm = ipm + 1;
-			
 			lm.add(new PosiMina(vf,vc));
 		}
 		

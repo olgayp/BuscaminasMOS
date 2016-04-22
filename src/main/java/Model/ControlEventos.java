@@ -95,7 +95,6 @@ public class ControlEventos implements ActionListener, MouseListener{
 		}
 		
 		if (e.getSource().equals(fin)){
-			//Buscaminas.getBuscaminas().setTop10(new Top10());
 			Buscaminas.getBuscaminas().getTop10().visualiazarTop10();
 			Buscaminas.getBuscaminas().getTablero().getFin().setEnabled(false);
 			Buscaminas.getBuscaminas().getTablero().getReinicio().setEnabled(false);
@@ -118,19 +117,11 @@ public class ControlEventos implements ActionListener, MouseListener{
 			sv = Integer.toString(cas.getValor());
 			Container cter = Buscaminas.getBuscaminas().getTablero().getPCasillas();
 			int posCas = cter.getComponentZOrder(grafCas);
-			
 			//casilla pulsada--> el juego comienza, se da la orden iniciar al observador
 			cas.iniciar();
 			if (cas.getEstado() == 0){ //si no marcada se acepta el evento
 			   if (cas.getValor() == -9){  // Casilla mina, el juego ha terminado
-				  // grafCas.setOpaque(false);
-				   grafCas.setIcon(new ImageIcon(cas.getImagen()));  //imagen de mina
-				   grafCas.setEnabled(false);
-				   String smr = getClass().getClassLoader().getResource("99R.png").toString();
-				   grafCas.setEtiqueta(smr.substring(6));
-			       cter.add(((GrafCasilla)e.getSource()).getEtiqueta(), posCas);
-			       cter.remove(posCas+1);
-			        		 
+				   grafCas.destaparCasillaMina();
 			       //
 			       // El juego ha terminado (se ha sacado una mina) --> descubrir resto de casillas
 				   //
@@ -138,67 +129,27 @@ public class ControlEventos implements ActionListener, MouseListener{
 				   for (int i = 0; i < listCas.length; i++){
 				       if (!(listCas[i] instanceof JLabel)){
 				          if (((GrafCasilla)listCas[i]).getCasilla().getValor() == -9){
-				             if ( ((GrafCasilla)listCas[i]).getCasilla().getEstado() == 2){
-				        		//etiqueta de bomba marcada
-				        	    String se = getClass().getClassLoader().getResource("99X.png").toString();
-				        		((GrafCasilla)listCas[i]).setEtiqueta(se.substring(6));
-				        	}
-				            ((GrafCasilla)listCas[i]).getCasilla().setEstado(1);//marcar a destapada ESTADO=1
-				        }
-					    else{
-					        //cambiar a etiqueta de tapada
-					        String se = null;
-					        if ( ((GrafCasilla)listCas[i]).getCasilla().getEstado() == 2){
-					        	se = getClass().getClassLoader().getResource("B11.png").toString();
-					        }		
-					        else{
-					        	se = getClass().getClassLoader().getResource("0B.png").toString();
-					        }
-					        ((GrafCasilla)listCas[i]).setEtiqueta(se.substring(6));
-					    }
-				        //*************** Sustituir botones por etiquetas al descubrir casilla
-					    cter.add(((GrafCasilla)listCas[i]).getEtiqueta(), i);
-					    cter.remove(i+1);
-					    //*************** Sustituir botones por etiquetas al descubrir casilla
-				      }
+				        	  ((GrafCasilla)listCas[i]).destaparCasilla();
+				          }
+					      else{
+					    	((GrafCasilla)listCas[i]).taparCasilla();
+					      }
+				       }
 				     }
 				     //dar orden de parar el juego al modelo Casilla
-				      cas.parar(-9);	    	
-				 }
-				 else{  // casilla no es mina, por tanto sacar su valor   	
-				     if (sv.equals("0")){ //si es cero es una casilla vacia - SPACES
-				        sv = "";
-				        grafCas.setText(sv);
-				        grafCas.setEnabled(false);
-				     	     
-				        //*************** Sustituir botones por etiquetas al descubrir casilla
-				        //filas del JPanel que contiene la casilla
-				        int fil = ((GridLayout)cter.getLayout()).getRows();  
-				        //columnas del JPanel que contiene la casilla
-				        int col = ((GridLayout)cter.getLayout()).getColumns();
-				        int x = cas.getI();
-				        int y = cas.getJ();
-				        cter.add(grafCas.getEtiqueta(), posCas);
-				        cter.remove(posCas+1);
-				        //*************** Sustituir botones por etiquetas al descubrir casilla
-				         
-				        //pulsar casillas vacias vecinas con doClick() recursivamente
-				         pulsarCasillasVacias(fil,col,posCas,cter,x,y);
-				     }
-				     else{ // si no es cero descubrir su valor
-				        	 grafCas.setText(sv);
-				        	 grafCas.setEnabled(false);
-				        	 grafCas.setVisible(false);
-				        		
-				        	 //*************** Sustituir botones por etiquetas al descubrir casilla
-				        	 cter.add(grafCas.getEtiqueta(), posCas);
-				        	 cter.remove(posCas+1);
-				        	//*************** Sustituir botones por etiquetas al descubrir casilla
-				     }
-				     cas.setEstado(1);   //marcar casilla como destapada ESTADO=1
-				}
-			}
-			 
+				     cas.parar(-9);	    	
+			  }
+			  else{  // casilla no es mina, por tanto sacar su valor   	
+				 grafCas.destaparCasilla();
+				 if (sv.equals("0")){  //si es cero es una casilla vacia - SPACES
+				    int fil = ((GridLayout)cter.getLayout()).getRows();  
+				    int col = ((GridLayout)cter.getLayout()).getColumns();
+				    int x = cas.getI();
+				    int y = cas.getJ();
+				    pulsarCasillasVacias(fil,col,posCas,cter,x,y);	
+			     }
+			  }
+		   } 
 		}
 		
 		if (e.getSource() instanceof JMenuItem){

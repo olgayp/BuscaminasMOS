@@ -51,6 +51,48 @@ public class GrafCasilla extends JButton{
 			etqVal = nl;
 		}
 		/**
+		 * Destapar Casilla
+		 */
+		public void destaparCasilla(){
+		     String sv = "";
+		     int posCas = getParent().getComponentZOrder(this);
+		     if (this.getCasilla().getEstado() == 2){
+		    	 String se = getClass().getClassLoader().getResource("99X.png").toString();
+		      	 this.setEtiqueta(se.substring(6));
+		     }
+			 sv = Integer.toString(cas.getValor());
+			 setText(sv);
+        	 setEnabled(false);
+        	 setVisible(false);
+        	 getParent().add(this.getEtiqueta(), posCas);
+		     getParent().remove(posCas+1);
+		}
+		/**
+		 * Destapar Casilla marcada con mina
+		 */
+		public void destaparCasillaMina(){
+			String se = getClass().getClassLoader().getResource("99R.png").toString();
+      		this.setEtiqueta(se.substring(6));
+			destaparCasilla();
+		}
+		/**
+		 * Tapar Casilla 
+		 */
+		public void taparCasilla(){
+			String se = null;
+	        if ( this.getCasilla().getEstado() == 2){
+	        	se = getClass().getClassLoader().getResource("B11.png").toString();
+	        }		
+	        else{
+	        	se = getClass().getClassLoader().getResource("0B.png").toString();
+	        }
+	        this.setEtiqueta(se.substring(6));
+	        int posCas = getParent().getComponentZOrder(this);
+	        getParent().add(this.getEtiqueta(), posCas);
+		    getParent().remove(posCas+1);
+	    }
+        
+		/**
 		 * Marcar Casilla
 		 */
 		public void marcarCasilla(){

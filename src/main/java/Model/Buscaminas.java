@@ -155,12 +155,6 @@ public class Buscaminas implements Observer{
 		return user;
 	}
 	
-	/**
-	 * setter del ranking Top10
-	 */
-	public void setTop10(Top10 top10){
-		this.top10 = top10;
-	}
 	
 	/**
 	 *************************************
