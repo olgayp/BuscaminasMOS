@@ -1,45 +1,18 @@
 package Model;
-/**
- *  Builder de la aplicacion Buscaminas
- */
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.GraphicsConfiguration;
-import java.util.*;
-import java.net.*;
-import java.applet.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JFrame;
-import javax.swing.*;
-import java.awt.*;
 
-import Model.User;
-import Grafica.Tablero;
-import Grafica.Logueo;
 import Grafica.GrafCasilla;
+import Grafica.Logueo;
+import Grafica.Tablero;
 import Grafica.Top10;
-
-import java.util.Timer;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.*;
-import javax.swing.BoxLayout;
-
-
-import javax.swing.border.SoftBevelBorder;
-
-import Model.Casilla;
-import Model.PosiMina;
-
-import javax.swing.border.BevelBorder;
 
 /**
  * 
@@ -58,7 +31,7 @@ public class Buscaminas implements Observer{
 	private static Logueo l;
 	private Top10 top10;
 	
-	public Buscaminas(){
+	private Buscaminas(){
 		
 	}
 	
@@ -76,6 +49,7 @@ public class Buscaminas implements Observer{
 	/**
 	 * Inicio de juego con la pantalla de eleccion de nivel
 	 */
+	//pasar parametro el nivel
 	public void iniciarJuego(){
 		top10 = new Top10();
 		l = new Logueo();
@@ -87,15 +61,21 @@ public class Buscaminas implements Observer{
 	 * @param tipo de tablero = nivel de juego (1 Facil, 2 Medio  o 3 Dificil)
 	 */
 	public void createTablero(int tipo){
-		if (tipo == 1){
-			tablero = new Tablero(NivelDificultad.FACIL,user.getNombre());  
-		}
-		if (tipo == 2){
+		//switch
+		
+		switch(tipo){
+		case 1:
+			tablero = new Tablero(NivelDificultad.FACIL,user.getNombre());
+			break;
+		case 2:
 			tablero = new Tablero(NivelDificultad.MEDIO,user.getNombre());
-		}
-		if (tipo == 3){
+			break;
+		case 3:
 			tablero = new Tablero(NivelDificultad.DIFICIL,user.getNombre());
+			break;
+		default:
 		}
+		
 		tablero.setVisible(true);
 		tablero.getFin().addActionListener(new ControlEventos());
 		tablero.getNuevo().addActionListener(new ControlEventos());

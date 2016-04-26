@@ -83,6 +83,14 @@ public class Tablero extends JFrame{
 	//Lista de minas del tablero
 	private ListaMinas lm;
 	
+	//Buscaminas inf: Singleton
+	//estadoJuego
+	//usuario, timer, nivel, innicializar,
+	
+	//Builder Casilla ---> crear matriz
+	
+	//Dependencias a traves de Buscaminas(opc) 
+	
 	/**
 	 * Launch the application.
 	 */
