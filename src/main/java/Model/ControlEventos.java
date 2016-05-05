@@ -25,9 +25,6 @@ import java.awt.*;
 
 import javax.swing.border.SoftBevelBorder;
 
-import Model.Casilla;
-import Model.PosiMina;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.*;
 

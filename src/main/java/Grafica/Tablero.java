@@ -1,7 +1,5 @@
 package Grafica;
 import java.awt.BorderLayout;
-import Model.Casilla;
-import Model.Buscaminas;
 import Model.ControlEventos;
 import Model.NivelDificultad;
 import java.util.Timer;
@@ -58,8 +56,10 @@ public class Tablero extends JFrame{
 	//Panel para marcador
 	//Campos utilizados para el marcador, minas, tiempo y boton de reinicio
 	private JPanel marcador;
+	private JLabel min;
 	private JLabel minas;
 	private JLabel tiempo;
+	private JLabel crono;
 	private JButton reinicio;
 	private int minasDescubiertas = 0;
     // Campos para usuario y fin partida
@@ -151,33 +151,47 @@ public class Tablero extends JFrame{
 	
 		marcador = new JPanel();
 		minas = new JLabel(String.valueOf(nivel.getNumMinas()));
-		
-		minas.setPreferredSize(new Dimension(35,35));
 	    minas.setForeground(Color.RED);
 		minas.setFont(new Font("Agency FB", Font.BOLD, 25));
 		minas.setOpaque(true);
 		minas.setBackground(Color.BLACK);
 		minas.setBorder((new MyBorder(true)).getBorde1());
 		
+		min = new JLabel();
+		String s = getClass().getClassLoader().getResource("min.png").toString();
+		min.setIcon(new ImageIcon(s.substring(6)));
+		
 		tiempo = new JLabel("0");
 		tiempo.setBorder((new MyBorder(true)).getBorde1());
-		tiempo.setPreferredSize(new Dimension(35,35));
 	    tiempo.setForeground(Color.RED);
 	    tiempo.setFont(new Font("Agency FB", Font.BOLD, 25));
 		tiempo.setOpaque(true);
 		tiempo.setBackground(Color.BLACK);
 		
+		crono = new JLabel();
+		s = getClass().getClassLoader().getResource("Crono.png").toString();
+		crono.setIcon(new ImageIcon(s.substring(6)));
+
 		reinicio = new JButton();
 		reinicio.setBorder((new MyBorder(false)).getBorde1());
-		String s = getClass().getClassLoader().getResource("nueva.png").toString();
+		s = getClass().getClassLoader().getResource("nueva.png").toString();
 		reinicio.setIcon(new ImageIcon(s.substring(6)));
 		reinicio.setName("reinicio");
-		reinicio.setPreferredSize(new Dimension(35,35));
 		
-		marcador.setLayout(new GridLayout(1,3,30+(10*nivel.getNivel()),10));
-		marcador.add(minas, BorderLayout.WEST);
-		marcador.add(reinicio, BorderLayout.CENTER);
-		marcador.add(tiempo, BorderLayout.EAST);
+		marcador.setLayout(null);
+		marcador.setPreferredSize(new Dimension(150,62));
+		marcador.add(min);
+		min.setBounds(14, 18, 18, 18);
+		marcador.add(minas);
+		minas.setBounds(34, 15, 39, 35);
+		marcador.add(reinicio);
+		int rest = 10*(nivel.getNumColumnas()%2);
+		reinicio.setBounds(10+((nivel.getNumColumnas()/2)*21)+rest, 15, 35, 35);
+	    marcador.add(tiempo);//, BorderLayout.EAST);
+	    tiempo.setBounds(10+10+((nivel.getNumColumnas()-2)*21), 15, 39,35);
+	    marcador.add(crono);
+	    crono.setBounds(tiempo.getX()+tiempo.getWidth(), 18, 19, 18);
+		
 		marcador.setBorder((new MyBorder(false)).getBorde());
 		add(marcador);
 		
