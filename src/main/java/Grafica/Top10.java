@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextArea;
 
-import Model.Buscaminas;
-import Model.ControlEventos;
 import Model.User;
 
 import javax.swing.JLabel;

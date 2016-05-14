@@ -1,4 +1,4 @@
-package Model;
+package Grafica;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.net.URL;
@@ -9,10 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Grafica.GrafCasilla;
-import Grafica.Logueo;
-import Grafica.Tablero;
-import Grafica.Top10;
+import Model.NivelDificultad;
+import Model.User;
 
 /**
  * 
@@ -28,7 +26,7 @@ public class Buscaminas implements Observer{
 	
 	private Tablero tablero;
 	private User user;
-	private static Logueo l;
+	private Logueo l;
 	private Top10 top10;
 	
 	private Buscaminas(){
@@ -67,7 +65,7 @@ public class Buscaminas implements Observer{
 		case 1:
 			tablero = new Tablero(NivelDificultad.FACIL,user.getNombre());
 			break;
-		case 2:
+		case 2:          
 			tablero = new Tablero(NivelDificultad.MEDIO,user.getNombre());
 			break;
 		case 3:
@@ -192,6 +190,7 @@ public class Buscaminas implements Observer{
 		}
         if (arg.equals("destapar")){
         	tablero.setCasillasActivas(tablero.getCasActivas() - 1);
+        	System.out.println("Activas: "+tablero.getCasActivas());
 			if (tablero.getCasActivas() == Integer.parseInt(tablero.getMinas().getText())){
 				victoria();
 			}

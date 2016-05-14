@@ -1,7 +1,5 @@
 package Grafica;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.*;
 
 import javax.swing.JFrame;
@@ -9,10 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-import java.util.*;
-import javax.swing.*;
 
-import Model.Buscaminas;
+import java.util.*;
+
+import javax.swing.*;
 
 
 public class Ayuda extends JFrame {

@@ -1,7 +1,8 @@
 package Grafica;
 import java.awt.BorderLayout;
-import Model.ControlEventos;
+
 import Model.NivelDificultad;
+
 import java.util.Timer;
 import java.util.*;
 import java.awt.Color;
@@ -9,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,12 +18,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.*;
 import javax.swing.BoxLayout;
+
 import java.awt.*;
+
 import javax.swing.border.SoftBevelBorder;
+
 import Model.Casilla;
 import Model.PosiMina;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -144,7 +151,7 @@ public class Tablero extends JFrame{
 		setTitle("Buscaminas "+nivel.name());
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 1000, 1000);
 		contentPane = new JPanel();
 		contentPane.setBorder((new MyBorder(false)).getBorde());
 		setContentPane(contentPane);
@@ -169,36 +176,45 @@ public class Tablero extends JFrame{
 		tiempo.setBackground(Color.BLACK);
 		
 		crono = new JLabel();
-		s = getClass().getClassLoader().getResource("Crono.png").toString();
-		crono.setIcon(new ImageIcon(s.substring(6)));
+		String s1 = getClass().getClassLoader().getResource("Crono.png").toString();
+		crono.setIcon(new ImageIcon(s1.substring(6)));
 
 		reinicio = new JButton();
 		reinicio.setBorder((new MyBorder(false)).getBorde1());
-		s = getClass().getClassLoader().getResource("nueva.png").toString();
-		reinicio.setIcon(new ImageIcon(s.substring(6)));
+		String s2 = getClass().getClassLoader().getResource("nueva.png").toString();
+		reinicio.setIcon(new ImageIcon(s2.substring(6)));
 		reinicio.setName("reinicio");
 		
 		marcador.setLayout(null);
-		marcador.setPreferredSize(new Dimension(150,62));
-		marcador.add(min);
-		min.setBounds(14, 18, 18, 18);
-		marcador.add(minas);
-		minas.setBounds(34, 15, 39, 35);
-		marcador.add(reinicio);
-		int rest = 10*(nivel.getNumColumnas()%2);
-		reinicio.setBounds(10+((nivel.getNumColumnas()/2)*21)+rest, 15, 35, 35);
-	    marcador.add(tiempo);//, BorderLayout.EAST);
-	    tiempo.setBounds(10+10+((nivel.getNumColumnas()-2)*21), 15, 39,35);
-	    marcador.add(crono);
-	    crono.setBounds(tiempo.getX()+tiempo.getWidth(), 18, 19, 18);
+	    marcador.setSize(60,62);
+		marcador.setPreferredSize(new Dimension(60,62));
 		
+		min.setSize(18,18);
+		marcador.add(min);
+		min.setBounds(13, 18, 18, 18);
+		marcador.add(minas);
+		minas.setSize(39,35);
+		minas.setBounds(32, 15, 39, 35);
+		marcador.add(reinicio);
+		int rest = 0;
+		rest = 10*(nivel.getNumColumnas()%2);
+		int p = 10+((nivel.getNumColumnas()/2)*21)+rest+1;
+		reinicio.setBounds(p, 15, 35, 35);
+	    marcador.add(tiempo);
+	    tiempo.setSize(39,35);
+	    p = 21+((nivel.getNumColumnas()-2)*21);
+	    tiempo.setBounds(p, 15, 39,35);
+	    p = tiempo.getX()+tiempo.getWidth();
+	    crono.setSize(18,18);
+	    crono.setBounds(p, 18, 18, 18);
+		marcador.add(crono);
 		marcador.setBorder((new MyBorder(false)).getBorde());
 		add(marcador);
+		
 		
 		pCasillas = new JPanel(); 
 		pCasillas.setBorder((new MyBorder(false)).getBorde());
 		pCasillas.setLayout(new GridLayout(fila, columna, 0, 0)); 
-		add(pCasillas);
 
 	
 		// Inicializar  matriz de  casillas vacias
@@ -219,7 +235,10 @@ public class Tablero extends JFrame{
 				JLabel l1 = generarEtiquetaValor(tablero[i][j]);
 				//crear boton-casilla para añadir al panel con su etiqueta
 				GrafCasilla gc = new GrafCasilla(tablero[i][j], l1);
-				pCasillas.add(gc);                 
+				pCasillas.add(gc);   
+				//if (gc.getCasilla().getValor() == -9){
+					//gc.setBackground(Color.RED);
+				//}
 			}
 		}
 		add(pCasillas);
@@ -567,5 +586,6 @@ public class Tablero extends JFrame{
 	    		 pCasillas.getComponent(i).setEnabled(actDes);
 			 }
 	     }
+		nuevo.setEnabled(actDes);
 	}
 }

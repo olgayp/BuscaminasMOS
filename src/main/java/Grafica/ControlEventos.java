@@ -1,11 +1,8 @@
-package Model;
+package Grafica;
 /**
  * Clase que controla todos los eventos sobre los botones de la aplicacion Buscaminas
  */
-import Grafica.GrafCasilla;
-import Grafica.Ayuda;
-import Grafica.Top10;
-import Grafica.Tablero;
+import Model.Casilla;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -24,7 +21,6 @@ import javax.swing.BoxLayout;
 import java.awt.*;
 
 import javax.swing.border.SoftBevelBorder;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.*;
 
@@ -138,6 +134,7 @@ public class ControlEventos implements ActionListener, MouseListener{
 			  }
 			  else{  // casilla no es mina, por tanto sacar su valor   	
 				 grafCas.destaparCasilla();
+				 grafCas.getCasilla().setEstado(1);
 				 if (sv.equals("0")){  //si es cero es una casilla vacia - SPACES
 				    int fil = ((GridLayout)cter.getLayout()).getRows();  
 				    int col = ((GridLayout)cter.getLayout()).getColumns();
@@ -265,7 +262,7 @@ public class ControlEventos implements ActionListener, MouseListener{
                   ((GrafCasilla)(ctainer.getComponent(p+1))).isEnabled() &&
                   ((GrafCasilla)(ctainer.getComponent(p+1))).getCasilla().getJ() < col &&
                   (i == ((GrafCasilla)(ctainer.getComponent(p+1))).getCasilla().getI()) && 
-                  (j+1 == ((GrafCasilla)(ctainer.getComponent(p+1))).getCasilla().getJ()                                       )
+                  (j+1 == ((GrafCasilla)(ctainer.getComponent(p+1))).getCasilla().getJ())
                   )
 			         ((GrafCasilla)(ctainer.getComponent(p+1))).doClick();
 		   

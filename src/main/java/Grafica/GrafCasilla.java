@@ -1,7 +1,6 @@
 package Grafica;
 
 import  Model.Casilla;
-import  Model.Buscaminas;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -66,6 +65,7 @@ public class GrafCasilla extends JButton{
         	 setVisible(false);
         	 getParent().add(this.getEtiqueta(), posCas);
 		     getParent().remove(posCas+1);
+		    
 		}
 		/**
 		 * Destapar Casilla marcada con mina
@@ -117,7 +117,4 @@ public class GrafCasilla extends JButton{
 		
 }
 
-		/**
-		 * todo el control de eventos se ha pasado a la clase ControlEventos
-		 */
 		
