@@ -47,13 +47,6 @@ public class PosiMinaTest {
 	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * Test method for {@link Model.PosiMina#PosiMina(int, int)}.
-	 */
-	@Test
-	public final void testPosiMina() {
-		assertNotNull(new PosiMina(1,2));
-	}
 
 	/**
 	 * Test method for {@link Model.PosiMina#getFbomb()}.

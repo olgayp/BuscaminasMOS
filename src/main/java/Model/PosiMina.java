@@ -16,12 +16,11 @@ public class PosiMina {   //guardar mina por si el ramdon da la misma posicion y
 	 public int getCbomb(){
 		 return cBomb;
 	 }
-	 public boolean getPista(){
+	 public boolean getPista (){
 		 return pista;
 	 }
-	 public void setPista(boolean b){
-		 pista = b;
+	 public void setPista (boolean p){
+		 pista = p;
 	 }
-	 
 	
 }

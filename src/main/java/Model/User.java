@@ -1,42 +1,33 @@
 package Model;
-import java.util.Calendar;
 
-//Almacena los usuarios nuevos junto con sus records
-
-public class User implements java.io.Serializable{
+public class User implements Comparable<User> {
 	private String nombre;
-	private String  nivel;
-	private int record;
-	private Calendar fechRecord;
-	
-	public User(String nombre, String n, int record) {
+	private int puntuacion;
+	public User(String nombre,int puntuacion){
 		this.nombre=nombre;
-		this.record=record;
-		nivel = n;
-		fechRecord = Calendar.getInstance();
-	}
-	
-	//Actualiza el record
-	public void nuevoRecord(int nRecord){
-		if(nRecord<=record){
-			record=nRecord;
-			fechRecord = Calendar.getInstance();
-		}
+		this.puntuacion=puntuacion;
 	}
 	public String getNombre(){
 		return nombre;
 	}
-	public int getRecord(){
-		return record;
+	public int getPuntuacion(){
+		return puntuacion;
 	}
-	public Calendar getFechRecord(){
-		return fechRecord;
+	public void setNombre(String n){
+		this.nombre=n;
 	}
-	public void setNombre(String nomb){
-		nombre = nomb;
+	public void setResultado(int r){
+		this.puntuacion=r;
 	}
-	public String getNivel(){
-		return nivel;
+	
+	
+public int compareTo(User u){
+		if(puntuacion<u.getPuntuacion()){
+			return -1;
+		}
+		if(puntuacion>u.getPuntuacion()){
+			return 1;
+		}
+		return 0;
 	}
-
 }

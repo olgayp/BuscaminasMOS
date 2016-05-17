@@ -1,35 +1,44 @@
 package Grafica;
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
-import java.util.ArrayList;
-import java.util.Calendar;
+
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
 
+import Model.Buscaminas;
 import Model.User;
 
 import javax.swing.JLabel;
 
 import java.awt.Font;
-import java.util.Hashtable;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Arrays;
 
 public class Top10 extends JFrame {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static Top10 mtop;
 	private JPanel contentPane;
-	private JTextArea textArea;
 	private JLabel lblMejoresResultados;
 	private JLabel label;
 	private JLabel lblNewLabel;
+	private JLabel lblValLabel;
 	private JButton aceptar;
-	private ArrayList<User> top10;
-	public static final int MEJORES=10; 
+	private boolean continuar;
+	private User[] top10=new User[10];
 
 	/**
 	 * Launch the application.
@@ -51,35 +60,47 @@ public class Top10 extends JFrame {
 	 * Create the frame.
 	 * @param top 
 	 */
-	public Top10(){
-		this.top10 = new ArrayList<User>();
-		inicializarTop10();
-		initialize();
+	 
+	public static Top10 getTop10(){
+		if(mtop==null){
+			mtop=new Top10();
+		}
+		return mtop;
 	}
-	
-	private void initialize() {
-		setTitle("Buscaminas: Los/as 10 mejores");
-		String im = getClass().getClassLoader().getResource("imgBusc.jpg").toString();
-		ImageIcon iconoBusc = new ImageIcon(im.substring(6));
-		this.setIconImage(((ImageIcon)iconoBusc).getImage());
+
+	public void initialize() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(850, 100, 400, 350);
+		setBounds(800, 120, 440, 340);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		textArea = new JTextArea();
-		textArea.setBounds(20, 60, 350, 200);
-		textArea.setEditable(false);
-		textArea.setBorder((new MyBorder(true)).getBorde1());
+		setResizable(false);
 		contentPane.setLayout(null);
 		contentPane.add(getLblMejoresResultados());
-		contentPane.add(textArea);
+		String im = getClass().getClassLoader().getResource("mine.png").toString();
+		this.setIconImage(new ImageIcon(im.substring(6)).getImage());
 		aceptar = new JButton("Aceptar");
-		aceptar.setBounds(130, 280, 89,23);
+		aceptar.setName("acepTop");
+		aceptar.setBounds(160, 260, 89,23);
 		aceptar.addActionListener(new ControlEventos());
+		aceptar.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if (continuar)
+				   Top10.this.dispose();
+				else{
+					Top10.this.dispose();
+					Buscaminas.getConBuildTablero().cerrarTablero();
+					Buscaminas.getConBuildTablero().deleteObservers();
+					Tablero tablero = new Tablero();
+					tablero.setVisible(false);
+					Logueo log = new Logueo();
+					log.setVisible(true);
+				}
+			}
+		});
 		contentPane.add(aceptar);
 		getLabel();
-		setResizable(false);
+		getLblNewLabel();
 	}
 
 	private JLabel getLblMejoresResultados() {
@@ -90,97 +111,127 @@ public class Top10 extends JFrame {
 		}
 		return lblMejoresResultados;
 	}
-	
 	public void getLabel() {
 		for(int i=1;i<11;i++){
 			label = new JLabel(i+"\u00BA");
-			label.setBounds(10, 10+(i*15), 34, 14);
-			textArea.add(label);
+			label.setBounds(100, 67+(i*15), 34, 14);
+			this.add(label);
 			label.setVisible(true);
 		}
 		
 	}
-	
 	public void getLblNewLabel() {
 		int i=0;
 		for (User u:top10){
 			i++;
-			lblNewLabel = new JLabel(String.valueOf(u.getRecord()));
-			lblNewLabel.setBounds(35, 10+(i*15), 50, 14);
-			textArea.add(lblNewLabel);
 			lblNewLabel = new JLabel(u.getNombre());
-			lblNewLabel.setBounds(90, 10+(i*15), 150, 14);
-			textArea.add(lblNewLabel);
-			String fecha = u.getFechRecord().get(Calendar.DATE) +"-"+
-					       (u.getFechRecord().get(Calendar.MONTH)+1)+"-"+
-					       u.getFechRecord().get(Calendar.YEAR);
-	     
-			lblNewLabel = new JLabel(String.valueOf(fecha));
-			lblNewLabel.setBounds(220, 10+(i*15), 120, 14);
-			textArea.add(lblNewLabel);
+			lblNewLabel.setBounds(140, 67+(i*15), 110, 14);
+			lblValLabel = new JLabel(String.valueOf(u.getPuntuacion()));
+			lblValLabel.setBounds(240, 67+(i*15), 60, 14);
+			this.add(lblNewLabel);
+			this.add(lblValLabel);
 			lblNewLabel.setVisible(true);
-			
+		}
+	}
+	public void inicializarTabla(boolean c){
+		continuar = c;
+		for(int i=0;i<top10.length;i++){
+			top10[i]=new User("Desconocido", 9999);
 		}
 	}
 	
-	public JButton getBtnAceptar() {
-		return aceptar;
-	}
-	
-	public void inicializarTop10(){
-		leerFichero();
-	
-	}
-	
-	public void visualiazarTop10(){
-	
-		comprobarRecord();
-		getLblNewLabel();
-		this.setVisible(true);
-	}
-	
-	public void comprobarRecord(){
-		boolean enc = false;
-		for (int i = 0; i < MEJORES && !enc; i++){
-		   if (Buscaminas.getBuscaminas().getUser().getRecord() <
-				top10.get(i).getRecord()){
-			    top10.add(i,Buscaminas.getBuscaminas().getUser());
-			    top10.remove(MEJORES);
-		        enc = true;   
-		   }
+	public void comprobarRecord(User jugador){
+		if(top10[9].getPuntuacion()>=jugador.getPuntuacion()){
+			System.out.println("puntuacionnnn:"+jugador.getPuntuacion());
+			top10[9]=jugador;
+			Arrays.sort(top10);
+			nuevoRecord(jugador.getPuntuacion());
 		}
 		actualizarFichero();
+		
 	}
-	
 	public void actualizarFichero(){
+		FileWriter fr = null;
+		BufferedWriter bw = null;
 		try{
-		   //String file
-		   //= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
-		   FileOutputStream fileOut = new FileOutputStream("fichero.obj");
-	       ObjectOutputStream salida=new ObjectOutputStream(fileOut);
-	       for (int j = 0; j < MEJORES; j++){
-	            salida.writeObject(top10.get(j));
-	       }
-	       salida.close();
-		}catch(Exception e){};
+			java.net.URL url=getClass().getClassLoader().getResource(Buscaminas.getConBuildTablero().getFichero());
+	    	File file =new File(url.getPath());
+	    	fr= new FileWriter(file);
+	        bw = new BufferedWriter(fr);
+	        for (int x=0;x<10;x++){
+	            bw.write(top10[x].getNombre()+"\n");
+	            bw.write(top10[x].getPuntuacion()+"\n");
+	            System.out.println(top10[x].getNombre()+" "+top10[x].getPuntuacion());
+	            
+	        }
+	        bw.close();
+		}
+		catch(Exception e){
+        	System.out.println("No se ha actualizado");
+		}
 	}
 
 
 	public void leerFichero(){
-		try{
-			//String file
-			//= getClass().getClassLoader().getResource("fichero.obj").toString().substring(6);
-			int i = 0;
-	    	FileInputStream fileIn = new FileInputStream("fichero.obj");
-	    	ObjectInputStream entrada=new ObjectInputStream(fileIn);
-	    	Object u = null;
-	    	u = entrada.readObject();
-	    	while(u != null){
-	    		top10.add(i,(User)u);
-	    		i = i+1;
-	            u = entrada.readObject();
-	    	}
-	        entrada.close();
-		}catch(Exception e){};
+		FileReader fr = null;
+	    BufferedReader br = null;
+	    try
+	    {
+	        //ruta puede ser de tipo String o tipo File
+	        //si usamos un File debemos hacer un import de esta clase
+	    	java.net.URL url=getClass().getClassLoader().getResource(Buscaminas.getConBuildTablero().getFichero());
+	    	File file =new File(url.getPath());
+	        fr = new FileReader(file);
+	        br = new BufferedReader( fr );
+	        //Obtenemos el contenido del archivo linea por linea
+	        String linea = br.readLine();
+	        for (int i=0;i<10 && linea!=null;i++){
+	        	top10[i].setNombre(linea);
+	            top10[i].setResultado(Integer.parseInt(br.readLine()));
+	            linea = br.readLine();
+	        }
+	    }
+	        catch (Exception e) {
+	        	System.out.println("No se ha leido");
+	        	actualizarFichero();
+	        	leerFichero();
+	        	top10[0].setNombre("Desconocido");
+	        }
+	    
+	}
+	
+	
+	
+	public void nuevoRecord(int cont){
+		User jugador= new User(Buscaminas.getConBuildTablero().getUser().getNombre(),cont);
+		int i;
+		int j = 0;
+		int c = 0;
+		for(i=0;i<top10.length;i++){
+			if(top10[i].getNombre().equals(jugador.getNombre())){
+				if(top10[i].getPuntuacion()>=cont){
+						top10[i].setResultado(cont);
+						c = c + 1;
+						if (c > 1){
+							top10[i].setNombre("Desconocido");
+							top10[i].setResultado(9999);
+						}
+					//	Arrays.sort(top10);
+				//		actualizarFichero();
+						j=1;
+				}
+				else{
+					j=1;
+				}
+			}
+		}
+		if(j!=1){
+			comprobarRecord(jugador);
+		}
+		else{
+			Arrays.sort(top10);
+			actualizarFichero();
+		}
+		
 	}
 }
